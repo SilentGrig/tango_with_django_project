@@ -3,3 +3,6 @@
 
 # Database
 *.sqlite3
+
+# Tango Chapter Tests
+rango/tests_chapter*.py
