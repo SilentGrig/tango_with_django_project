@@ -4,13 +4,14 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-pylama = "*"
 coverage = "*"
 black = "*"
+flake8 = "*"
 
 [packages]
 django = "~=2.2"
 pillow = "~=5.4"
+pre-commit = "*"
 
 [requires]
 python_version = "3.7"
