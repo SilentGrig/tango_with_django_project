@@ -20,7 +20,7 @@ def populate():
             "url": "http://docs.python.org/3/tutorial/",
         },
         {
-            "title": "How to Thing like a Computer Scientist",
+            "title": "How to Think like a Computer Scientist",
             "url": "http://www.greenteapress.com/thinkpython/",
         },
         {
@@ -53,7 +53,7 @@ def populate():
     # add them to the dictionaries above.
 
     for cat, cat_data in cats.items():
-        c = add_cat(cat)
+        c = add_cat(cat, cat_data["views"], cat_data["likes"])
         for p in cat_data["pages"]:
             add_page(c, p["title"], p["url"])
 
@@ -70,8 +70,8 @@ def add_page(cat, title, url, views=0):
     return p
 
 
-def add_cat(name):
-    c = Category.objects.get_or_create(name=name)[0]
+def add_cat(name, views, likes):
+    c = Category.objects.get_or_create(name=name, views=views, likes=likes)[0]
     c.save()
     return c
 

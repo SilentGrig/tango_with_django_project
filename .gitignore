@@ -2,7 +2,7 @@
 .vscode
 
 # Database
-*.sqlite3
+db.sqlite3
 
 # Tango Chapter Tests
 rango/tests_chapter*.py
