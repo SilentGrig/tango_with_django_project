@@ -6,3 +6,6 @@
 
 # Tango Chapter Tests
 rango/tests_chapter*.py
+
+# Python
+*.pyc
