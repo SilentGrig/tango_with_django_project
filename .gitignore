@@ -9,3 +9,6 @@ rango/tests_chapter*.py
 
 # Python
 *.pyc
+
+# Rango media files
+media/*
