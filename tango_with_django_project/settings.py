@@ -136,3 +136,7 @@ MEDIA_ROOT = MEDIA_DIR
 
 # Restriced Page acces redirect URL
 LOGIN_URL = "rango:login"
+
+# Cookies
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
