@@ -8,6 +8,7 @@ click==7.1.1
 coverage==5.0.4
 distlib==0.3.0
 Django==2.2.11
+django-registration-redux==2.2
 entrypoints==0.3
 filelock==3.0.12
 flake8==3.7.9
