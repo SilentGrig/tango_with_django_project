@@ -64,10 +64,12 @@
 			<main role="main" class="col-md-9  ml-sm-auto col-lg-10 px-4">
 				<div class="jumbotron p-4">
 					<div class="container">
-					{% block heading_block %}{% endblock %}
+						{% block heading_block %}{% endblock %}
 					</div>
 				</div>
-				{% block content_block %}{% endblock %}
+				<div class="container">
+					{% block content_block %}{% endblock %}
+				</div>
 				<!-- FOOTER -->
 				<footer>
 					<p class="float-right"><a href="#">Back to top</a></p>
