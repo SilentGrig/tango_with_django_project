@@ -8,6 +8,10 @@
 .form-rango {
   min-width: 100%;
 }
+.form-rango-registration {
+  min-width: 60%;
+  margin: 0;
+}
 .form .form-heading,
 .form .checkbox {
   margin-bottom: 10px;
