@@ -4,14 +4,16 @@
 	Register
 {% endblock %}
 
-{% block body_block %}
-<h1>Register Here</h1>
+{% block heading_block %}
+	<h1 class="jumbotron-heading">Register Here</h1>
+{% endblock %}
 
-<form method="post" action=".">
-	{% csrf_token %}
+{% block content_block %}
+	<form method="post" action=".">
+		{% csrf_token %}
 
-	{{ form.as_p }}
+		{{ form.as_p }}
 
-	<input type="submit" value="Register" />
-</form>
+		<input type="submit" value="Register" />
+	</form>
 {% endblock %}

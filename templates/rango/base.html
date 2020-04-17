@@ -62,8 +62,12 @@
 			</nav>
 
 			<main role="main" class="col-md-9  ml-sm-auto col-lg-10 px-4">
-				{% block body_block %}{% endblock %}
-
+				<div class="jumbotron p-4">
+					<div class="container">
+					{% block heading_block %}{% endblock %}
+					</div>
+				</div>
+				{% block content_block %}{% endblock %}
 				<!-- FOOTER -->
 				<footer>
 					<p class="float-right"><a href="#">Back to top</a></p>
