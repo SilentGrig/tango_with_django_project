@@ -5,22 +5,28 @@
 {% endblock %}
 
 {% block heading_block %}
-    <h1 class="jumbotron-heading">Add a Page</h1>
+    <h1 class="jumbotron-heading">Add a Page to {{ category.name }}</h1>
 {% endblock %}
 
 {% block content_block %}
-    <div>
-        <form id="page_form" method="post" action="{% url 'rango:add_page' category.slug %}">
+    <div class="row">
+        <form class="form form-rango" role="form" id="page_form" method="post" 
+                action="{% url 'rango:add_page' category.slug %}">
             {% csrf_token %}
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
             {% endfor %}
             {% for field in form.visible_fields %}
                 {{ field.errors }}
-                {{ field.help_text }}
-                {{ field }}
+                {{ field.help_text }}<br/>
+                {{ field }}<br/>
             {% endfor %}
-            <input type="submit" name="submit" value="Create Page" />
+            <br/>
+            <div class="p-2"></div>
+            <button class="btn btn-primary" type="submit" name="submit">
+                Add Page
+            </button>
+            <div class="p-5"></div>
         </form> 
     </div>
 {% endblock %}

@@ -16,6 +16,10 @@ class CategoryForm(forms.ModelForm):
         model = Category
         fields = ("name",)
 
+    def __init__(self, *args, **kwargs):
+        super(CategoryForm, self).__init__(*args, **kwargs)
+        self.fields["name"].widget.attrs.update({"class": "form-control"})
+
 
 class PageForm(forms.ModelForm):
     title = forms.CharField(
@@ -30,6 +34,11 @@ class PageForm(forms.ModelForm):
     class Meta:
         model = Page
         exclude = ("category",)
+
+    def __init__(self, *args, **kwargs):
+        super(PageForm, self).__init__(*args, **kwargs)
+        self.fields["title"].widget.attrs.update({"class": "form-control"})
+        self.fields["url"].widget.attrs.update({"class": "form-control"})
 
     def clean(self):
         cleaned_data = self.cleaned_data

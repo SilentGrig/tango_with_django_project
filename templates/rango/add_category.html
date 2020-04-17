@@ -9,18 +9,21 @@
 {% endblock %}
 
 {% block content_block %}
-    <div>
-        <form id="category_form" method="post" action="{% url 'rango:add_category' %}">
+    <div class="row">
+        <form class="form form-rango" role="form" id="category_form" method="post" 
+                action="{% url 'rango:add_category' %}">
             {% csrf_token %}
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
             {% endfor %}
             {% for field in form.visible_fields %}
                 {{ field.errors }}
-                {{ field.help_text }}
-                {{ field }}
+                {{ field.help_text }}<br/>
+                {{ field }}<br/>
             {% endfor %}
-            <input type="submit" name="submit" value="Create Category" />
+            <div class="p-2"></div>
+            <button class="btn btn-primary" type="submit" name="submit">Create Category</button>
+            <div class="p-5"></div>
         </form>
     </div>
 {% endblock %}
