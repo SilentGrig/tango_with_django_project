@@ -134,7 +134,13 @@ def search(request):
         if query:
             result_list = run_query(query)
             context_dict["query"] = query
+        else:
+            context_dict["query"] = None
 
     context_dict["result_list"] = result_list
 
     return render(request, "rango/search.html", context=context_dict)
+
+
+def goto_url(request, page_id):
+    pass
