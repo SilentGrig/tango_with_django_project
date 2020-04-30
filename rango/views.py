@@ -37,7 +37,7 @@ def show_category(request, category_name_slug):
 
     try:
         category = Category.objects.get(slug=category_name_slug)
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.order_by("-views").filter(category=category)
         context_dict["pages"] = pages
         context_dict["category"] = category
     except Category.DoesNotExist:
@@ -143,4 +143,15 @@ def search(request):
 
 
 def goto_url(request, page_id):
-    pass
+    if request.method == "GET":
+        try:
+            page = Page.objects.get(id=page_id)
+        except Page.DoesNotExist:
+            page = None
+
+        if page:
+            page.views += 1
+            page.save()
+            return redirect(page.url)
+
+    return redirect(reverse("rango:index"))
