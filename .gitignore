@@ -12,3 +12,6 @@ rango/tests_chapter*.py
 
 # Rango media files
 media/*
+
+# key files
+*.key
