@@ -33,7 +33,12 @@ def about(request):
 
 
 def show_category(request, category_name_slug):
-    context_dict = {}
+    query, result_list = search(request)
+
+    context_dict = {
+        "query": query if query else "",
+        "result_list": result_list,
+    }
 
     try:
         category = Category.objects.get(slug=category_name_slug)
@@ -127,19 +132,14 @@ def visitor_cookie_handler(request):
 
 def search(request):
     result_list = []
-    context_dict = {}
+    query = None
 
     if request.method == "POST":
-        query = request.POST["query"].strip()
+        query = request.POST.get("query").strip()
         if query:
             result_list = run_query(query)
-            context_dict["query"] = query
-        else:
-            context_dict["query"] = None
 
-    context_dict["result_list"] = result_list
-
-    return render(request, "rango/search.html", context=context_dict)
+    return query, result_list
 
 
 def goto_url(request, page_id):
