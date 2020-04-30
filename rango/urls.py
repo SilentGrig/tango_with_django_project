@@ -17,4 +17,5 @@ urlpatterns = [
     path("restricted/", views.restricted, name="restricted"),
     # path("search/", views.search, name="search"),
     path("goto/<int:page_id>/", views.goto_url, name="goto"),
+    path("register_profile/", views.register_profile, name="register_profile"),
 ]

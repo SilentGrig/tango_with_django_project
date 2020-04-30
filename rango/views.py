@@ -1,13 +1,13 @@
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
 from rango.bing_search import run_query
-from rango.forms import CategoryForm, PageForm
-from rango.models import Category, Page
+from rango.forms import CategoryForm, PageForm, UserProfileForm
+from rango.models import Category, Page, UserProfile
 
 
 def index(request):
@@ -61,7 +61,7 @@ def add_category(request):
 
         if form.is_valid():
             form.save(commit=True)
-            return redirect("/rango/")
+            return redirect(reverse("rango:index"))
         else:
             print(form.errors)
     return render(request, "rango/add_category.html", {"form": form})
@@ -75,7 +75,7 @@ def add_page(request, category_name_slug):
         category = None
 
     if category is None:
-        return redirect("/rango/")
+        return redirect(reverse("rango:index"))
 
     form = PageForm()
 
@@ -155,3 +155,39 @@ def goto_url(request, page_id):
             return redirect(page.url)
 
     return redirect(reverse("rango:index"))
+
+
+def register_profile(request):
+    form = UserProfileForm()
+
+    try:
+        user_id = request.session.get("_auth_user_id")
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        user = None
+
+    try:
+        user_profile = UserProfile.objects.get(user_id=user.id)
+    except UserProfile.DoesNotExist:
+        user_profile = None
+
+    # if cant find user or user already has a profile
+    if user is None or user_profile:
+        return redirect(reverse("rango:index"))
+
+    if request.method == "POST":
+        form = UserProfileForm(request.POST)
+
+        if form.is_valid():
+            user_profile = form.save(commit=False)
+
+            if "picture" in request.FILES:
+                user_profile.picture = request.FILES["picture"]
+
+            user_profile.user = user
+            user_profile.save()
+            return redirect(reverse("rango:index"))
+        else:
+            print(form.errors)
+
+    return render(request, "rango/profile_registration.html", {"form": form})

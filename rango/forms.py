@@ -50,22 +50,19 @@ class PageForm(forms.ModelForm):
         return cleaned_data
 
 
-class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
-
-    class Meta:
-        model = User
-        fields = (
-            "username",
-            "email",
-            "password",
-        )
-
-
 class UserProfileForm(forms.ModelForm):
+    website = forms.URLField(
+        max_length=Page.URL_MAX_LENGTH,
+        help_text="Please enter the URL of your website:",
+        required=False,
+    )
+    picture = forms.ImageField(required=False, help_text="Picture:")
+
     class Meta:
         model = UserProfile
-        fields = (
-            "website",
-            "picture",
-        )
+        exclude = ("user",)
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        self.fields["website"].widget.attrs.update({"class": "form-control"})
+        self.fields["picture"].widget.attrs.update({"class": "form-control"})
