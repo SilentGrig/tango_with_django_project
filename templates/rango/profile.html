@@ -11,14 +11,35 @@
 {% endblock %}
 
 {% block content_block %}
-	<form class="form form-rango" 
-		  role="form" 
-		  id="page_form" 
-		  method="post" 
-		  action="{% url 'rango:profile' selected_user.username %}"
-		  enctype="multipart/form-data">
-		{% csrf_token %}
-		{{ form.as_p }}
-		<button class="btn btn-primary" name="submit" type="submit">Update Profile</button>
-	</form>
+	<div class="row">
+		{% if user_profile.picture %}
+			<img src="{{ MEDIA_URL }}{{ user_profile.picture }}"
+				width="300px"
+				height="300px"
+				alt="{{ selected_user.username }}'s profile image"/>
+		{% else %}
+			<div class="no-image-div"><span>No Image</span></div>
+		{% endif %}
+		<br />
+		<div>
+			{% if selected_user == user %}
+				<form class="form form-rango" 
+					  role="form" 
+					  id="page_form" 
+					  method="post"
+					  action="." 
+					  enctype="multipart/form-data">
+					{% csrf_token %}
+					{{ form.as_p }}
+					<button class="btn btn-primary" name="submit" type="submit">Update Profile</button>	
+				</form>
+			{% else %}
+				<p>
+					<strong>Website: </strong>
+					<a href="{{ user_profile.website }}">{{ user_profile.website }}</a>
+				</p>
+			{% endif %}
+		</div>
+		
+	</div>
 {% endblock %}

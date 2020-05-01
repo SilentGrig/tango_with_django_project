@@ -232,6 +232,7 @@ class ProfileView(View):
         )
 
         context_dict = {
+            "user": request.user,
             "selected_user": user,
             "user_profile": user_profile,
             "form": form,
@@ -241,7 +242,7 @@ class ProfileView(View):
 
     def post(self, request, username):
         user = get_user(username)
-        if not user:
+        if not user or not request.user == user:
             return redirect(reverse("rango:index"))
 
         user_profile = get_user_profile(user)
@@ -250,8 +251,11 @@ class ProfileView(View):
 
         if form.is_valid():
             form.save()
+        else:
+            print(form.errors)
 
         context_dict = {
+            "user": request.user,
             "selected_user": user,
             "user_profile": user_profile,
             "form": form,
