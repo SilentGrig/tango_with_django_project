@@ -22,12 +22,14 @@ MEDIA_DIR = os.path.join(BASE_DIR, "media")
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ")fe6wupfkj=iqbd6kts4kd_v#0t7wjz^4f5pcjzodiptwlf-di"
+SECRET_KEY = None
+with open("secret.key", "r") as f:
+    SECRET_KEY = f.readline().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["rangogrig.pythonanywhere.com", "localhost"]
 
 
 # Application definition
@@ -149,3 +151,13 @@ SIMPLE_BACKEND_REDIRECT_URL = "rango:register_profile"
 LOGIN_REDIRECT_URL = "rango:index"
 
 LOGIN_URL = "auth_login"
+
+
+### Production Settings
+
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# SECURE_BROWSER_XSS_FILTER = True
+# SESSION_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = True
+# CSRF_COOKIE_SECURE = True
+# X_FRAME_OPTIONS = "DENY"
