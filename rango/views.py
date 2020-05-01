@@ -35,24 +35,39 @@ class AboutView(View):
         return render(request, "rango/about.html", context=context_dict)
 
 
-def show_category(request, category_name_slug):
-    query, result_list = search(request)
+class ShowCategoryView(View):
+    query = ""
+    result_list = []
+    template_name = "rango/category.html"
+    context_dict = {}
 
-    context_dict = {
-        "query": query if query else "",
-        "result_list": result_list,
-    }
+    def get(self, request, category_name_slug):
+        self.populate_list(request, category_name_slug)
+        return render(request, self.template_name, context=self.context_dict)
 
-    try:
-        category = Category.objects.get(slug=category_name_slug)
-        pages = Page.objects.order_by("-views").filter(category=category)
-        context_dict["pages"] = pages
-        context_dict["category"] = category
-    except Category.DoesNotExist:
-        context_dict["category"] = None
-        context_dict["pages"] = None
+    def post(self, request, category_name_slug):
+        self.search(request)
+        self.populate_list(request, category_name_slug)
+        return render(request, self.template_name, context=self.context_dict)
 
-    return render(request, "rango/category.html", context=context_dict)
+    def search(self, request):
+        if request.method == "POST":
+            self.query = request.POST.get("query").strip()
+            if self.query:
+                self.result_list = run_query(self.query)
+
+    def populate_list(self, request, category_name_slug):
+        try:
+            category = Category.objects.get(slug=category_name_slug)
+            pages = Page.objects.order_by("-views").filter(category=category)
+            self.context_dict["pages"] = pages
+            self.context_dict["category"] = category
+        except Category.DoesNotExist:
+            self.context_dict["category"] = None
+            self.context_dict["pages"] = None
+
+        self.context_dict["query"] = self.query
+        self.context_dict["result_list"] = self.result_list
 
 
 @login_required
@@ -131,18 +146,6 @@ def visitor_cookie_handler(request):
         request.session["last_visit"] = last_visit_cookie
 
     request.session["visits"] = visits
-
-
-def search(request):
-    result_list = []
-    query = None
-
-    if request.method == "POST":
-        query = request.POST.get("query").strip()
-        if query:
-            result_list = run_query(query)
-
-    return query, result_list
 
 
 def goto_url(request, page_id):
