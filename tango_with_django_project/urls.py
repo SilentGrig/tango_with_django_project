@@ -18,10 +18,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from rango import views
+from rango.views import IndexView
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    path("", IndexView.as_view(), name="index"),
     path("rango/", include("rango.urls")),
     path("admin/", admin.site.urls),
     path("accounts/", include("registration.backends.simple.urls")),
