@@ -50,6 +50,23 @@ class PageForm(forms.ModelForm):
         return cleaned_data
 
 
+class UserForm(forms.ModelForm):
+    username = forms.CharField(required=False)
+    email = forms.CharField(required=False)
+
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "email",
+        )
+
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs.update({"class": "form-control"})
+        self.fields["email"].widget.attrs.update({"class": "form-control"})
+
+
 class UserProfileForm(forms.ModelForm):
     website = forms.URLField(
         max_length=Page.URL_MAX_LENGTH,

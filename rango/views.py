@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 
 from rango.bing_search import run_query
-from rango.forms import CategoryForm, PageForm, UserProfileForm
+from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from rango.models import Category, Page, UserProfile
 
 
@@ -157,19 +157,12 @@ def goto_url(request, page_id):
     return redirect(reverse("rango:index"))
 
 
+@login_required
 def register_profile(request):
     form = UserProfileForm()
 
-    try:
-        user_id = request.session.get("_auth_user_id")
-        user = User.objects.get(id=user_id)
-    except User.DoesNotExist:
-        user = None
-
-    try:
-        user_profile = UserProfile.objects.get(user_id=user.id)
-    except UserProfile.DoesNotExist:
-        user_profile = None
+    user = get_user(request)
+    user_profile = get_user_profile(user)
 
     # if cant find user or user already has a profile
     if user is None or user_profile:
@@ -191,3 +184,42 @@ def register_profile(request):
             print(form.errors)
 
     return render(request, "rango/profile_registration.html", {"form": form})
+
+
+def show_user_profile(request):
+    user = get_user(request)
+    if not user:
+        return redirect(reverse("rango:index"))
+
+    context_dict = {}
+    user_form = UserForm()
+    user_profile_form = UserProfileForm()
+
+    if request.method == "POST":
+        user_form = UserForm(request.POST)
+        user_profile_form = UserProfileForm(request.POST)
+
+        if user_form.is_valid():
+            user_form.save(commit=True)
+            return redirect(reverse("rango:index"))
+
+    context_dict["user_form"] = user_form
+    context_dict["user_profile_form"] = user_profile_form
+    return render(request, "rango/profile.html", context=context_dict)
+
+
+def get_user(request):
+    try:
+        user_id = request.session.get("_auth_user_id")
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        user = None
+    return user
+
+
+def get_user_profile(user):
+    try:
+        user_profile = UserProfile.objects.get(user_id=user.id)
+    except UserProfile.DoesNotExist:
+        user_profile = None
+    return user_profile

@@ -1,0 +1,20 @@
+{% extends 'rango/base.html' %}
+
+{% load staticfiles %}
+
+{% block title_block %}
+	User Profile
+{% endblock %}
+
+{% block heading_block %}
+	<h1 class="jumbotron-heading">User Profile</h1>
+{% endblock %}
+
+{% block content_block %}
+	<form class="form form-rango" role="form" id="page_form" method="post" action="{% url 'rango:profile' %}">
+		{% csrf_token %}
+		{{ user_form.as_p }}
+		{{ user_profile_form.as_p }}
+		<button class="btn btn-primary" name="submit" type="submit">Update Profile</button>
+	</form>
+{% endblock %}
