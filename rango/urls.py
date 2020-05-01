@@ -6,9 +6,9 @@ from rango.views import (
     AddCategoryView,
     AddPageView,
     IndexView,
+    RegisterProfileView,
     ShowCategoryView,
     goto_url,
-    register_profile,
     restricted,
     show_user_profile,
 )
@@ -33,6 +33,10 @@ urlpatterns = [
     ),
     path("restricted/", restricted, name="restricted"),
     path("goto/<int:page_id>/", goto_url, name="goto"),
-    path("register_profile/", register_profile, name="register_profile"),
+    path(
+        "register_profile/",
+        login_required(RegisterProfileView.as_view()),
+        name="register_profile",
+    ),
     path("profile/", show_user_profile, name="profile"),
 ]

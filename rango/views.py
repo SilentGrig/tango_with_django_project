@@ -177,33 +177,40 @@ def goto_url(request, page_id):
     return redirect(reverse("rango:index"))
 
 
-@login_required
-def register_profile(request):
-    form = UserProfileForm()
+class RegisterProfileView(View):
+    class_form = UserProfileForm
+    template_name = "rango/profile_registration.html"
 
-    user = get_user(request)
-    user_profile = get_user_profile(user)
+    def get(self, request):
+        user = get_user(request)
+        user_profile = get_user_profile(user)
+        # if cant find user or user already has a profile
+        if user is None or user_profile:
+            return redirect(reverse("rango:index"))
 
-    # if cant find user or user already has a profile
-    if user is None or user_profile:
-        return redirect(reverse("rango:index"))
+        form = self.class_form()
 
-    if request.method == "POST":
-        form = UserProfileForm(request.POST)
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request):
+        user = get_user(request)
+        user_profile = get_user_profile(user)
+
+        # if cant find user or user already has a profile
+        if user is None or user_profile:
+            return redirect(reverse("rango:index"))
+
+        form = self.class_form(request.POST, request.FILES)
 
         if form.is_valid():
             user_profile = form.save(commit=False)
-
-            if "picture" in request.FILES:
-                user_profile.picture = request.FILES["picture"]
-
             user_profile.user = user
             user_profile.save()
             return redirect(reverse("rango:index"))
         else:
             print(form.errors)
 
-    return render(request, "rango/profile_registration.html", {"form": form})
+        return render(request, self.template_name, {"form": form})
 
 
 def show_user_profile(request):
@@ -217,7 +224,7 @@ def show_user_profile(request):
 
     if request.method == "POST":
         user_form = UserForm(request.POST)
-        user_profile_form = UserProfileForm(request.POST)
+        user_profile_form = UserProfileForm(request.POST, request.FILES)
 
         if user_form.is_valid():
             user_form.save(commit=True)
