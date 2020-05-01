@@ -181,9 +181,13 @@ class RegisterProfileView(View):
     class_form = UserProfileForm
     template_name = "rango/profile_registration.html"
 
-    def get(self, request):
-        user = get_user(request)
+    def get_user_and_profile(self, request):
+        user = request.user
         user_profile = get_user_profile(user)
+        return user, user_profile
+
+    def get(self, request):
+        user, user_profile = self.get_user_and_profile(request)
         # if cant find user or user already has a profile
         if user is None or user_profile:
             return redirect(reverse("rango:index"))
@@ -193,9 +197,7 @@ class RegisterProfileView(View):
         return render(request, self.template_name, {"form": form})
 
     def post(self, request):
-        user = get_user(request)
-        user_profile = get_user_profile(user)
-
+        user, user_profile = self.get_user_and_profile(request)
         # if cant find user or user already has a profile
         if user is None or user_profile:
             return redirect(reverse("rango:index"))
@@ -206,6 +208,7 @@ class RegisterProfileView(View):
             user_profile = form.save(commit=False)
             user_profile.user = user
             user_profile.save()
+
             return redirect(reverse("rango:index"))
         else:
             print(form.errors)
@@ -213,48 +216,63 @@ class RegisterProfileView(View):
         return render(request, self.template_name, {"form": form})
 
 
-def show_user_profile(request):
-    user = get_user(request)
-    if not user:
-        return redirect(reverse("rango:index"))
+class ProfileView(View):
+    class_form = UserProfileForm
+    template_name = "rango/profile.html"
 
-    context_dict = {}
-    user_form = UserForm()
-    user_profile_form = UserProfileForm()
-
-    if request.method == "POST":
-        user_form = UserForm(request.POST)
-        user_profile_form = UserProfileForm(request.POST, request.FILES)
-
-        if user_form.is_valid():
-            user_form.save(commit=True)
+    def get(self, request, username):
+        user = get_user(username)
+        if not user:
             return redirect(reverse("rango:index"))
 
-    context_dict["user_form"] = user_form
-    context_dict["user_profile_form"] = user_profile_form
-    return render(request, "rango/profile.html", context=context_dict)
+        user_profile = get_user_profile(user)
+
+        form = self.class_form(
+            initial={"website": user_profile.website, "picture": user_profile.picture}
+        )
+
+        context_dict = {
+            "selected_user": user,
+            "user_profile": user_profile,
+            "form": form,
+        }
+
+        return render(request, self.template_name, context=context_dict)
+
+    def post(self, request, username):
+        user = get_user(username)
+        if not user:
+            return redirect(reverse("rango:index"))
+
+        user_profile = get_user_profile(user)
+
+        form = self.class_form(request.POST, request.FILES, instance=user_profile)
+
+        if form.is_valid():
+            form.save()
+
+        context_dict = {
+            "selected_user": user,
+            "user_profile": user_profile,
+            "form": form,
+        }
+
+        return render(request, self.template_name, context=context_dict)
 
 
-def get_user(request):
+def get_user(username):
     try:
-        user_id = request.session.get("_auth_user_id")
-        user = User.objects.get(id=user_id)
+        return User.objects.get(username=username)
     except User.DoesNotExist:
-        user = None
-    return user
+        return None
 
 
 def get_user_profile(user):
-    try:
-        user_profile = UserProfile.objects.get(user_id=user.id)
-    except UserProfile.DoesNotExist:
-        user_profile = None
-    return user_profile
+    return UserProfile.objects.get_or_create(user_id=user.id)[0]
 
 
 def get_category(category_name_slug):
     try:
-        category = Category.objects.get(slug=category_name_slug)
+        return Category.objects.get(slug=category_name_slug)
     except Category.DoesNotExist:
-        category = None
-    return category
+        return None

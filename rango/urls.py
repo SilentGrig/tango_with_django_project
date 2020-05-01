@@ -6,11 +6,11 @@ from rango.views import (
     AddCategoryView,
     AddPageView,
     IndexView,
+    ProfileView,
     RegisterProfileView,
     ShowCategoryView,
     goto_url,
     restricted,
-    show_user_profile,
 )
 
 app_name = "rango"
@@ -38,5 +38,5 @@ urlpatterns = [
         login_required(RegisterProfileView.as_view()),
         name="register_profile",
     ),
-    path("profile/", show_user_profile, name="profile"),
+    path("profile/<str:username>/", ProfileView.as_view(), name="profile"),
 ]
