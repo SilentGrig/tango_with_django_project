@@ -39,16 +39,15 @@ class ShowCategoryView(View):
     query = ""
     result_list = []
     template_name = "rango/category.html"
-    context_dict = {}
 
     def get(self, request, category_name_slug):
-        self.populate_list(request, category_name_slug)
-        return render(request, self.template_name, context=self.context_dict)
+        context_dict = self.generate_context(request, category_name_slug)
+        return render(request, self.template_name, context=context_dict)
 
     def post(self, request, category_name_slug):
         self.search(request)
-        self.populate_list(request, category_name_slug)
-        return render(request, self.template_name, context=self.context_dict)
+        context_dict = self.generate_context(request, category_name_slug)
+        return render(request, self.template_name, context=context_dict)
 
     def search(self, request):
         if request.method == "POST":
@@ -56,33 +55,40 @@ class ShowCategoryView(View):
             if self.query:
                 self.result_list = run_query(self.query)
 
-    def populate_list(self, request, category_name_slug):
+    def generate_context(self, request, category_name_slug):
+        context_dict = {}
         try:
             category = Category.objects.get(slug=category_name_slug)
             pages = Page.objects.order_by("-views").filter(category=category)
-            self.context_dict["pages"] = pages
-            self.context_dict["category"] = category
+            context_dict["pages"] = pages
+            context_dict["category"] = category
         except Category.DoesNotExist:
-            self.context_dict["category"] = None
-            self.context_dict["pages"] = None
+            context_dict["category"] = None
+            context_dict["pages"] = None
 
-        self.context_dict["query"] = self.query
-        self.context_dict["result_list"] = self.result_list
+        context_dict["query"] = self.query
+        context_dict["result_list"] = self.result_list
+        return context_dict
 
 
-@login_required
-def add_category(request):
-    form = CategoryForm()
+class AddCategoryView(View):
+    form_class = CategoryForm
+    template_name = "rango/add_category.html"
 
-    if request.method == "POST":
-        form = CategoryForm(request.POST)
+    def get(self, request):
+        form = self.form_class()
+        return render(request, self.template_name, context={"form": form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
 
         if form.is_valid():
             form.save(commit=True)
             return redirect(reverse("rango:index"))
         else:
             print(form.errors)
-    return render(request, "rango/add_category.html", {"form": form})
+
+        return render(request, self.template_name, context={"form": form})
 
 
 @login_required

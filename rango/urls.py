@@ -1,10 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.urls import path
 
 from rango.views import (
     AboutView,
+    AddCategoryView,
     IndexView,
     ShowCategoryView,
-    add_category,
     add_page,
     goto_url,
     register_profile,
@@ -22,7 +23,9 @@ urlpatterns = [
         ShowCategoryView.as_view(),
         name="show_category",
     ),
-    path("add_category/", add_category, name="add_category"),
+    path(
+        "add_category/", login_required(AddCategoryView.as_view()), name="add_category"
+    ),
     path("category/<slug:category_name_slug>/add_page/", add_page, name="add_page"),
     path("restricted/", restricted, name="restricted"),
     path("goto/<int:page_id>/", goto_url, name="goto"),
