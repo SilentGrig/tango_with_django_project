@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.views import View
 
 from rango.bing_search import run_query
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
@@ -23,13 +24,14 @@ def index(request):
     return render(request, "rango/index.html", context=context_dict)
 
 
-def about(request):
-    visitor_cookie_handler(request)
-    context_dict = {
-        "your_name": "Gregory Thomas",
-        "visits": request.session["visits"],
-    }
-    return render(request, "rango/about.html", context=context_dict)
+class AboutView(View):
+    def get(self, request):
+        visitor_cookie_handler(request)
+        context_dict = {
+            "your_name": "Gregory Thomas",
+            "visits": request.session["visits"],
+        }
+        return render(request, "rango/about.html", context=context_dict)
 
 
 def show_category(request, category_name_slug):
