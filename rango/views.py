@@ -91,20 +91,28 @@ class AddCategoryView(View):
         return render(request, self.template_name, context={"form": form})
 
 
-@login_required
-def add_page(request, category_name_slug):
-    try:
-        category = Category.objects.get(slug=category_name_slug)
-    except Category.DoesNotExist:
-        category = None
+class AddPageView(View):
+    form_class = PageForm
+    template_name = "rango/add_page.html"
 
-    if category is None:
-        return redirect(reverse("rango:index"))
+    def get(self, request, category_name_slug):
+        category = get_category(category_name_slug)
 
-    form = PageForm()
+        if category is None:
+            return redirect(reverse("rango:index"))
 
-    if request.method == "POST":
-        form = PageForm(request.POST)
+        form = self.form_class()
+
+        context_dict = {"form": form, "category": category}
+        return render(request, self.template_name, context=context_dict)
+
+    def post(self, request, category_name_slug):
+        category = get_category(category_name_slug)
+
+        if category is None:
+            return redirect(reverse("rango:index"))
+
+        form = self.form_class(request.POST)
 
         if form.is_valid():
             if category:
@@ -121,8 +129,8 @@ def add_page(request, category_name_slug):
         else:
             print(form.errors)
 
-    context_dict = {"form": form, "category": category}
-    return render(request, "rango/add_page.html", context=context_dict)
+        context_dict = {"form": form, "category": category}
+        return render(request, self.template_name, context=context_dict)
 
 
 @login_required
@@ -235,3 +243,11 @@ def get_user_profile(user):
     except UserProfile.DoesNotExist:
         user_profile = None
     return user_profile
+
+
+def get_category(category_name_slug):
+    try:
+        category = Category.objects.get(slug=category_name_slug)
+    except Category.DoesNotExist:
+        category = None
+    return category

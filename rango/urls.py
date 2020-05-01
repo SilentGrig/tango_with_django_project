@@ -4,9 +4,9 @@ from django.urls import path
 from rango.views import (
     AboutView,
     AddCategoryView,
+    AddPageView,
     IndexView,
     ShowCategoryView,
-    add_page,
     goto_url,
     register_profile,
     restricted,
@@ -26,7 +26,11 @@ urlpatterns = [
     path(
         "add_category/", login_required(AddCategoryView.as_view()), name="add_category"
     ),
-    path("category/<slug:category_name_slug>/add_page/", add_page, name="add_page"),
+    path(
+        "category/<slug:category_name_slug>/add_page/",
+        login_required(AddPageView.as_view()),
+        name="add_page",
+    ),
     path("restricted/", restricted, name="restricted"),
     path("goto/<int:page_id>/", goto_url, name="goto"),
     path("register_profile/", register_profile, name="register_profile"),
