@@ -138,7 +138,7 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = MEDIA_DIR
 
 # Cookies
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 ### Registration settings
 # Can users register
