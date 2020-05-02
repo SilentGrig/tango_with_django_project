@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
@@ -272,6 +273,23 @@ class ProfileListView(View):
         return render(
             request, self.template_name, context={"user_profile_list": profile_list}
         )
+
+
+class LikeCategoryView(View):
+    def get(self, request):
+        category_id = request.GET["category_id"]
+
+        try:
+            category = Category.objects.get(id=int(category_id))
+        except Category.DoesNotExist:
+            return HttpResponse(-1)
+        except ValueError:
+            return HttpResponse(-1)
+
+        category.likes += 1
+        category.save()
+
+        return HttpResponse(category.likes)
 
 
 def get_user(username):

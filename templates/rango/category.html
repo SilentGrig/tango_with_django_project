@@ -13,6 +13,18 @@
 {% block heading_block %}
     {% if category %}
         <h1 class="jumbotron-heading">{{ category.name }}</h1>
+        <div>
+            <strong id="like_count">{{ category.likes }}</strong> likes
+            {% if user.is_authenticated %}
+                <button id="like_btn"
+                        data-categoryid="{{ category.id }}"
+                        class="btn btn-primary"
+                        type="button">
+                    <span data-feather="thumbs-up"></span>
+                    Like Category
+                    </button>
+            {% endif %}
+        </div>
     {% else %}
         The specified category does not exist.
     {% endif %}

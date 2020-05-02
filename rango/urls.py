@@ -6,6 +6,7 @@ from rango.views import (
     AddCategoryView,
     AddPageView,
     IndexView,
+    LikeCategoryView,
     ProfileListView,
     ProfileView,
     RegisterProfileView,
@@ -46,5 +47,10 @@ urlpatterns = [
         "list_profiles/",
         login_required(ProfileListView.as_view()),
         name="list_profiles",
+    ),
+    path(
+        "like_category/",
+        login_required(LikeCategoryView.as_view()),
+        name="like_category",
     ),
 ]
