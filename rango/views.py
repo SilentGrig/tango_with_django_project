@@ -270,7 +270,7 @@ class ProfileListView(View):
     def get(self, request):
         profile_list = UserProfile.objects.all()
         return render(
-            request, self.template_name, context={"profile_list": profile_list}
+            request, self.template_name, context={"user_profile_list": profile_list}
         )
 
 

@@ -12,12 +12,19 @@
 
 {% block content_block %}
 	<div class="row">
-		{% if profile_list %}
+		{% if user_profile_list %}
 		<ul class="list-group">
-			{% for profile in profile_list %}
+			{% for user_profile in user_profile_list %}
 			<li class="list-group-item">
 				<h4 class="list-group-item-heading">
-					<a href="{% url 'rango:profile' profile.user.username %}">{{ profile.user.username }}</a>
+					{% if user_profile.picture %}
+						<img src="{{ MEDIA_URL }}{{ user_profile.picture }}" height="20px" width="20px" />
+					{% else %}
+						<div class="no-image-profile-list"></div>
+					{% endif %}
+					<a href="{% url 'rango:profile' user_profile.user.username %}">
+						{{ user_profile.user.username }}
+					</a>
 				</h4>	
 			</li>
 			{% endfor %}
