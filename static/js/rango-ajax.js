@@ -21,4 +21,23 @@ $(document).ready(function() {
 			}
 		);
 	});
+
+	$('.add-page').click(function() {
+		const catecategoryIdVar = $(this).attr('data-categoryid');
+		const dataPageTitle = $(this).attr('data-pagetitle');
+		const dataPageUrl = $(this).attr('data-pageurl');
+		const clickedButton = $(this);
+
+		$.get("/rango/search_add_page/",
+			{
+				"category_id" : catecategoryIdVar,
+				"page_title": dataPageTitle,
+				"page_url": dataPageUrl
+		},
+		function(data) {
+			$('#page-list').html(data);
+			clickedButton.hide();
+		}
+		);
+	});
 });

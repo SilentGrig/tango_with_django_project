@@ -306,3 +306,21 @@ class CategorySuggestionView(View):
             category_list = Category.objects.order_by("-likes")
 
         return render(request, "rango/categories.html", {"categories": category_list})
+
+
+class SearchAddPageView(View):
+    def get(self, request):
+        category_id = request.GET["category_id"]
+        page_title = request.GET["page_title"]
+        page_url = request.GET["page_url"]
+
+        try:
+            category = Category.objects.get(id=category_id)
+        except Category.DoesNotExist:
+            return HttpResponse("Error - invalid category")
+
+        Page.objects.get_or_create(category=category, title=page_title, url=page_url)
+
+        pages = Page.objects.order_by("-views").filter(category=category)
+
+        return render(request, "rango/list_pages.html", {"pages": pages})

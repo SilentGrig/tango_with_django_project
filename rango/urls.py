@@ -11,6 +11,7 @@ from rango.views import (
     ProfileListView,
     ProfileView,
     RegisterProfileView,
+    SearchAddPageView,
     ShowCategoryView,
     goto_url,
     restricted,
@@ -55,4 +56,9 @@ urlpatterns = [
         name="like_category",
     ),
     path("suggest/", CategorySuggestionView.as_view(), name="suggest"),
+    path(
+        "search_add_page/",
+        login_required(SearchAddPageView.as_view()),
+        name="search_add_page",
+    ),
 ]
