@@ -264,6 +264,16 @@ class ProfileView(View):
         return render(request, self.template_name, context=context_dict)
 
 
+class ProfileListView(View):
+    template_name = "rango/list_profiles.html"
+
+    def get(self, request):
+        profile_list = UserProfile.objects.all()
+        return render(
+            request, self.template_name, context={"profile_list": profile_list}
+        )
+
+
 def get_user(username):
     try:
         return User.objects.get(username=username)

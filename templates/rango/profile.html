@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block heading_block %}
-	<h1 class="jumbotron-heading">{{ selected_user.username }}'s Profile</h1>
+	<h1 class="jumbotron-heading">{{ selected_user.username|title }}'s Profile</h1>
 {% endblock %}
 
 {% block content_block %}
@@ -16,7 +16,7 @@
 			<img src="{{ MEDIA_URL }}{{ user_profile.picture }}"
 				width="300px"
 				height="300px"
-				alt="{{ selected_user.username }}'s profile image"/>
+				alt="{{ selected_user.username|title }}'s profile image"/>
 		{% else %}
 			<div class="no-image-div"><span>No Image</span></div>
 		{% endif %}
