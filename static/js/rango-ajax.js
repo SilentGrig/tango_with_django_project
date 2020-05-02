@@ -10,4 +10,15 @@ $(document).ready(function() {
 			}
 		);
 	});
+
+	$('#search-input').keyup(function() {
+		const query = $(this).val();
+
+		$.get('/rango/suggest/',
+			{'suggestion': query},
+			function(data) {
+				$('#categories-listing').html(data);
+			}
+		);
+	});
 });
