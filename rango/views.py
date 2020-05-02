@@ -9,6 +9,7 @@ from django.views import View
 
 from rango.bing_search import run_query
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
+from rango.helpers import get_category, get_category_list, get_user, get_user_profile
 from rango.models import Category, Page, UserProfile
 
 
@@ -294,22 +295,14 @@ class LikeCategoryView(View):
 
 class CategorySuggestionView(View):
     def get(self, request):
-        pass
+        if "suggestion" in request.GET:
+            suggestion = request.GET["suggestion"]
+        else:
+            suggestion = ""
 
+        category_list = get_category_list(max_results=8, starts_with=suggestion)
 
-def get_user(username):
-    try:
-        return User.objects.get(username=username)
-    except User.DoesNotExist:
-        return None
+        if len(category_list) == 0:
+            category_list = Category.objects.order_by("-likes")
 
-
-def get_user_profile(user):
-    return UserProfile.objects.get_or_create(user_id=user.id)[0]
-
-
-def get_category(category_name_slug):
-    try:
-        return Category.objects.get(slug=category_name_slug)
-    except Category.DoesNotExist:
-        return None
+        return render(request, "rango/categories.html", {"categories": category_list})
