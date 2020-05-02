@@ -55,6 +55,12 @@ def populate():
         "Python": {"pages": python_pages, "views": 128, "likes": 64,},
         "Django": {"pages": django_pages, "views": 64, "likes": 32,},
         "Other Frameworks": {"pages": other_pages, "views": 32, "likes": 16,},
+        "Pascal": {"pages": [], "views": 76, "likes": 62,},
+        "Perl": {"pages": [], "views": 53, "likes": 43,},
+        "PHP": {"pages": [], "views": 42, "likes": 34,},
+        "Prolog": {"pages": [], "views": 23, "likes": 98,},
+        "PostScript": {"pages": [], "views": 34, "likes": 98,},
+        "Programming": {"pages": [], "views": 43, "likes": 23,},
     }
 
     # If you want to add more categories or pages,
@@ -79,7 +85,9 @@ def add_page(cat, title, url, views=0):
 
 
 def add_cat(name, views, likes):
-    c = Category.objects.get_or_create(name=name, views=views, likes=likes)[0]
+    c = Category.objects.get_or_create(name=name)[0]
+    c.views = views
+    c.likes = likes
     c.save()
     return c
 

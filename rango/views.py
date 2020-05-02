@@ -292,6 +292,11 @@ class LikeCategoryView(View):
         return HttpResponse(category.likes)
 
 
+class CategorySuggestionView(View):
+    def get(self, request):
+        pass
+
+
 def get_user(username):
     try:
         return User.objects.get(username=username)
