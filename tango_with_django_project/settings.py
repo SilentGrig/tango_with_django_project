@@ -145,8 +145,6 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 REGISTRATION_OPEN = True
 # auto login user after registration
 REGISTRATION_AUTO_LOGIN = True
-# redirect after registration
-SIMPLE_BACKEND_REDIRECT_URL = "rango:register_profile"
 # url redirect after login
 LOGIN_REDIRECT_URL = "rango:index"
 

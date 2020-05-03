@@ -11,7 +11,14 @@ def get_user(username):
 
 
 def get_user_profile(user):
-    return UserProfile.objects.get_or_create(user_id=user.id)[0]
+    try:
+        return UserProfile.objects.get(user=user)
+    except UserProfile.DoesNotExist:
+        return None
+
+
+def get_or_create_user_profile(user):
+    return UserProfile.objects.get_or_create(user=user)[0]
 
 
 def get_category(category_name_slug):
