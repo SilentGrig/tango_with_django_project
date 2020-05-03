@@ -6,10 +6,17 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
+from registration.backends.simple.views import RegistrationView
 
 from rango.bing_search import run_query
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
-from rango.helpers import get_category, get_category_list, get_user, get_user_profile
+from rango.helpers import (
+    get_category,
+    get_category_list,
+    get_or_create_user_profile,
+    get_user,
+    get_user_profile,
+)
 from rango.models import Category, Page, UserProfile
 
 
@@ -227,7 +234,7 @@ class ProfileView(View):
         if not user:
             return redirect(reverse("rango:index"))
 
-        user_profile = get_user_profile(user)
+        user_profile = get_or_create_user_profile(user)
 
         form = self.class_form(
             initial={"website": user_profile.website, "picture": user_profile.picture}
@@ -264,6 +271,11 @@ class ProfileView(View):
         }
 
         return render(request, self.template_name, context=context_dict)
+
+
+class MyRegistrationView(RegistrationView):
+    def get_success_url(self, user):
+        return reverse("rango:register_profile")
 
 
 class ProfileListView(View):
