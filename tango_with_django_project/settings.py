@@ -27,7 +27,7 @@ with open("secret.key", "r") as f:
     SECRET_KEY = f.readline().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["rangogrig.pythonanywhere.com", "localhost"]
 
@@ -155,9 +155,9 @@ LOGIN_URL = "auth_login"
 
 ### Production Settings
 
-# SECURE_CONTENT_TYPE_NOSNIFF = True
-# SECURE_BROWSER_XSS_FILTER = True
-# SESSION_COOKIE_SECURE = True
-# SECURE_SSL_REDIRECT = True
-# CSRF_COOKIE_SECURE = True
-# X_FRAME_OPTIONS = "DENY"
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+CSRF_COOKIE_SECURE = True
+X_FRAME_OPTIONS = "DENY"
