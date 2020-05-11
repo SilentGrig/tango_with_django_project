@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.views import View
 from registration.backends.simple.views import RegistrationView
 
@@ -180,6 +181,7 @@ def goto_url(request, page_id):
 
         if page:
             page.views += 1
+            page.last_visit = timezone.now()
             page.save()
             return redirect(page.url)
 
