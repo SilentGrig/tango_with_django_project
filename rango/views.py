@@ -72,8 +72,8 @@ class ShowCategoryView(View):
     def generate_context(self, request, category_name_slug):
         context_dict = {}
         try:
-            category = Category.objects.get(slug=category_name_slug)
-            pages = Page.objects.order_by("-views").filter(category=category)
+            category = ShowCategoryView.get_category(category_name_slug)
+            pages = ShowCategoryView.get_pages(category)
             context_dict["pages"] = pages
             context_dict["category"] = category
         except Category.DoesNotExist:
@@ -83,6 +83,14 @@ class ShowCategoryView(View):
         context_dict["query"] = self.query
         context_dict["result_list"] = self.result_list
         return context_dict
+
+    @staticmethod
+    def get_category(category_name_slug):
+        return Category.objects.get(slug=category_name_slug)
+
+    @staticmethod
+    def get_pages(category):
+        return Page.objects.order_by("-views").filter(category=category)
 
 
 class AddCategoryView(View):
