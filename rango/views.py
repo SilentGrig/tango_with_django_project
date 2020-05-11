@@ -59,7 +59,11 @@ class ShowCategoryView(View):
         context_dict = self.generate_context(request, category_name_slug)
         return render(request, self.template_name, context=context_dict)
 
-    def search(self, request):
+    def search(self, request, TESTING=False):
+        if TESTING:
+            self.result_list = stub_bing_response()
+            return
+
         if request.method == "POST":
             self.query = request.POST.get("query").strip()
             if self.query:
@@ -338,3 +342,7 @@ class SearchAddPageView(View):
         pages = Page.objects.order_by("-views").filter(category=category)
 
         return render(request, "rango/list_pages.html", {"pages": pages})
+
+
+def stub_bing_response():
+    return ["first result", "second result"]
