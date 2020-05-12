@@ -72,8 +72,8 @@ class ShowCategoryView(View):
     def generate_context(self, request, category_name_slug):
         context_dict = {}
         try:
-            category = ShowCategoryView.get_category(category_name_slug)
-            pages = ShowCategoryView.get_pages(category)
+            category = self.get_category(category_name_slug)
+            pages = self.get_pages(category)
             context_dict["pages"] = pages
             context_dict["category"] = category
         except Category.DoesNotExist:
@@ -96,21 +96,29 @@ class ShowCategoryView(View):
 class AddCategoryView(View):
     form_class = CategoryForm
     template_name = "rango/add_category.html"
+    form = {}
 
     def get(self, request):
-        form = self.form_class()
-        return render(request, self.template_name, context={"form": form})
+        self.form = self.form_class()
+        return render(request, self.template_name, context={"form": self.form})
 
     def post(self, request):
-        form = self.form_class(request.POST)
+        success = self.add_category(request)
 
-        if form.is_valid():
-            form.save(commit=True)
+        if success:
             return redirect(reverse("rango:index"))
         else:
-            print(form.errors)
+            return render(request, self.template_name, context={"form": self.form})
 
-        return render(request, self.template_name, context={"form": form})
+    def add_category(self, request):
+        self.form = self.form_class(request.POST)
+
+        if self.form.is_valid():
+            self.form.save(commit=True)
+            return True
+        else:
+            print(self.form.errors)
+            return False
 
 
 class AddPageView(View):
